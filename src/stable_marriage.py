@@ -1,9 +1,6 @@
 import sys
 import time
 
-N = 0
-women = []
-men = []
 p_list = []
 
 def generate_inverted_preference_list(sub_list):
@@ -28,7 +25,8 @@ class Man:
         self.pointer += 1
 
     def get_preferred(self):
-        return self.pref_list[self.pointer]
+        self.inc_pointer()
+        return self.pref_list[self.pointer-1]
 
 class Woman:
 
@@ -70,7 +68,7 @@ def parse_data():
         if women[id-1] == 0:
             women[id-1] = Woman(id,inv_list)
         else:
-            men[id-1] = Man(id,inv_list)
+            men[id-1] = Man(id,data[1:])
             p_list.append(men[id-1])
     p_list.reverse()
     return (women,men, N)
@@ -78,7 +76,7 @@ def parse_data():
 def stable_marriage():
     while len(p_list) > 0:
         man = p_list.pop()
-        woman = women[man.get_preferred()]
+        woman = women[man.get_preferred()-1]
         if woman.partner is None:
             woman.updatePartner(man)
         elif woman.propose(man.value):
@@ -87,7 +85,6 @@ def stable_marriage():
             p_list.append(m_prime)
         else:
             p_list.append(man)
-        man.inc_pointer()
 
     for woman in women:
         print(woman.partner.value)
