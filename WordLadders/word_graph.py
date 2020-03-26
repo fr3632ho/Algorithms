@@ -1,7 +1,7 @@
 import sys
 
 
-
+# Parses the input data
 def parse_data():
     inp_file = sys.stdin
     result = inp_file.read().strip().split('\n')
