@@ -12,5 +12,5 @@ def parse_data():
 
 
 
-(N,Q,words,queries) = parse_data()
-print(N,Q,words,Queries)
+N, Q, words, queries = parse_data()
+print(N,Q,words,queries)
