@@ -1,7 +1,6 @@
 import sys
+from collections import defaultdict as Map
 
-
-# Parses the input data
 def parse_data():
     inp_file = sys.stdin
     result = inp_file.read().strip().split('\n')
@@ -9,5 +8,9 @@ def parse_data():
     (N,Q) = (first_line[0],first_line[1])
     N_list = result[1:N]
     Q_list = result[N+1:N+1+Q]
+    return (N,Q,N_list,Q_list)
 
-parse_data()
+
+
+(N,Q,words,queries) = parse_data()
+print(N,Q,words,Queries)
