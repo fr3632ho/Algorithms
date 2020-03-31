@@ -69,8 +69,7 @@ def parse_data():
             women[id-1] = Woman(id,inv_list)
         else:
             men[id-1] = Man(id,data[1:])
-            p_list.append(men[id-1])
-    p_list.reverse()
+            p_list.appendleft(men[id-1])
     return women,men, N
 
 '''
