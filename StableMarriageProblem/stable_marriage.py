@@ -1,4 +1,5 @@
 import sys
+import time
 from collections import deque
 
 p_list = deque([])
@@ -91,5 +92,10 @@ def stable_marriage():
     for woman in women:
         print(woman.partner.value)
 
+start = time.perf_counter_ns()
 women,men,N = parse_data()
+gs = time.perf_counter_ns()
 stable_marriage()
+end = time.perf_counter_ns()
+print(f'''\n# Total run time: {(end - start) / 10**9}
+# G.S. run time: {(end - gs) / 10**9}''')
