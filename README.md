@@ -8,6 +8,10 @@ One O(n<sup>2</sup>) solution to the stable marriage problem, with the Gale-Shap
 * The algorithm reaches a stable solution, this can be shown with a proof of contradicition. Assume there is a dissatisfied pair (m<sub>1</sub>,w<sub>1</sub>) where m<sub>1</sub> is paired with w<sub>2</sub> and w<sub>2</sub> is paired with m<sub>2</sub> when the algorithm terminates, implying that m1 prefers w<sub>1</sub> to w<sub>2</sub>. If this is the case then m<sub>1</sub> must have proposed to w<sub>1</sub> already and been rejected or been dumped since w<sub>1</sub> must have preferred m<sub>2</sub> to m<sub>1</sub>. Our assumption is then false and there can't be a dissatisfied pair (m<sub>1</sub>,w<sub>1</sub>) when the algorithm terminates. Hence the solution is stable.
 * Assume we have a male-optimal matching A and if for any male *m* we have a stable solution C, A(m) <p>$sum;</p> C(m). Assume we also have a matching B which is male-pessimal and if for any male *m* we have a stable solution C, C(m) >= B(m). Now assume A = B, which implies that A(m) >= C(m) >= B(m) = A(m). Then A = C and the solution is unique.
 
+<p>I will display &sum;</p>
+<p>I will display &#8721;</p>
+<p>I will display &#x2211;</p>
+
 ### Word Ladders
 Graphing problem which is yet not solved. Finding the shortest path with the help of the BFS-algorithm
 
