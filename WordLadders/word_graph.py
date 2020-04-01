@@ -1,19 +1,20 @@
-import sys
-from collections import defaultdict as Map
+#!/bin/python3
 
+import sys
+from collections import deque
 
 def parse_data():
     inp_file = sys.stdin
     result = inp_file.read().strip().split('\n')
     first_line = [int(x) for x in result[0].split()]
-    (N, Q) = (first_line[0], first_line[1])
-    N_list = result[1:N]
+    (N,Q) = (first_line[0],first_line[1])
+    N_list = result[1:N+1]
     Q_list = result[N+1:N+1+Q]
     return N,Q,N_list,Q_list
 
 def setup_graph(words):
     copy = words.copy()
-    graph = Map()
+    graph = dict()
     for key in words:
         graph.setdefault(key,[])
 
@@ -36,6 +37,43 @@ def setup_graph(words):
                         graph[string_word1].append(copy[j])
     return graph
 
-N,Q,words,queries = parse_data()
+N, Q, words, queries = parse_data()
 graph = setup_graph(words)
-#print(str(N),str(Q) + '\n',str(words) + '\n', str(queries) + '\n')
+#print(f'# of words: {N}, # of queries: {Q}\nWords: {words}\nQueries: {queries}\n')
+#print(f'Current graph: {graph} \n')
+
+# discovered = []
+# 'where' : ['there', 'shere']
+# 'where' --> queue.
+# discovered.append('where')
+# look_at_verices('where') --> ['there', 'shere']
+#
+# visit_vertices -- > 'there' --> goal --> end
+#     otherwise:
+
+def BFS(G, start, end):
+    #discovered = [False] * len(G.keys())
+    if start == end:
+        return 0
+    discovered = []
+    queue = []
+    discovered.append(start)
+    queue.append([start,0])
+    while queue:
+        v = queue.pop()
+        if v[0] == end:
+            return v[1]
+        for edge in graph[v[0]]:
+            if edge not in discovered:
+                discovered.append(edge)
+                queue.append([edge,v[1] + 1])
+
+    return "Impossible"
+
+q_list = [ i.split(" ") for i in queries]
+
+for query in q_list:
+    print(BFS(graph,query[0],query[1]))
+
+
+#END
