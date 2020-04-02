@@ -61,7 +61,7 @@ def parse_data():
     N = int(lines[0])
     women = [0]*N
     men = [0]*N
-    all_numbers = [int(i) for line in lines[1:] for i in line.split()]
+    all_numbers = [int(i) for line in lines[1:] for i in line.split()] # O(n^2)
     for i in range(2*N):
         data = all_numbers[i*(N+1):(1+i)*(N+1)]
         id = data[0]
@@ -91,6 +91,7 @@ def stable_marriage():
 
     for woman in women:
         print(woman.partner.value)
+
 
 start = time.perf_counter_ns()
 women,men,N = parse_data()
