@@ -54,8 +54,7 @@ def setup_graph(words):
 def BFS(G, start, end):
     if start == end:
         return 0
-    discovered,queue = {start},deque([])
-    queue.append([start,0])
+    discovered,queue = {start},deque([[start,0]])
     while queue:
         v = queue.pop()
         if v[0] == end:
@@ -73,6 +72,6 @@ def run():
     queries = [ i.split(" ") for i in Q]
     for query in queries:
         print(BFS(graph,query[0],query[1]))
-    print(f'TOTAL RUN TIME: {(time.perf_counter_ns() - start)/10**9 }')
+    #print(f'TOTAL RUN TIME: {(time.perf_counter_ns() - start)/10**9 }')
 
 run()
