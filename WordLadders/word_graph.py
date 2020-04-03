@@ -1,6 +1,6 @@
 import sys
+import time
 from collections import deque
-from collections import defaultdict
 
 '''
 # Description: Parses the given file and seperates the input into two lists; A word
@@ -53,8 +53,7 @@ def setup_graph(words):
 def BFS(G, start, end):
     if start == end:
         return 0
-    discovered,queue = dict(),deque([])
-    discovered[start] = 0
+    discovered,queue = {start},deque([])
     queue.append([start,0])
     while queue:
         v = queue.pop()
@@ -62,15 +61,17 @@ def BFS(G, start, end):
             return v[1]
         for vertex in G[v[0]]:
             if vertex not in discovered:
-                discovered[vertex] = 0
+                discovered.update([vertex])
                 queue.appendleft([vertex,v[1] + 1])
     return "Impossible"
 
 def run():
     W, Q = parse_data()
+    start = time.perf_counter_ns()
     graph = setup_graph(W)
     queries = [ i.split(" ") for i in Q]
     for query in queries:
         print(BFS(graph,query[0],query[1]))
+    print(f'TOTAL RUN TIME: {(time.perf_counter_ns() - start)/10**9 }')
 
 run()
