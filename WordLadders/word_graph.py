@@ -47,6 +47,7 @@ def setup_graph(words):
 
 '''
 # Description: The BFS algorithm
+# Datastructures: Set, deque and dict
 # Returns: Returns the shortest amount of steps needed to get from 'start' to 'end'
   or 'Impossible' if a path could not be found.
 '''
