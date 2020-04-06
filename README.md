@@ -12,7 +12,7 @@ One O(n<sup>2</sup>) solution to the stable marriage problem, with the Gale-Shap
 <p>Graphing problem. Find the length of the shortest path between any nodes a,b &isin; G. Implemented soultion is done with the help of the BFS algorithm. </p>
 * The graph is represented as a dicitionary with words as keys and their connecting nodes as their values.
 * If one were to perform backtracking, how would that be done? For instance, each and every node could keep track of a path leading back to the starting node, and then simply return that path if the end point is found. However, this would take up a lot of memory since for the case were a path can't be found in a large data set, that would imply that a lot of lists will have to be instansiated and thus taking up space.
-* <p> Say for the graph that we have the vertex set V and edge set E the time complexity for BFS would be O(V+E). Let's assume that |E|&ge;|V|, which it would be for most graphs. This implies that |V|+|E|&le;|E|+|E|=2 *|E|. With our assumption we now see that |E|&ge;|V| and thus O(V+E) is the same as O(E) for large sets. However, if |V|&g;|E|, then |V|+|E|&le;|V|+|V|=2*|V|, then O(V+E) is the same as O(V)! By putting both cases together we get O(V+E).  </p>
+* Say for the graph that we have the vertex set V and edge set E the time complexity for BFS would be O(V+E). Let's assume that <p>  |E|&ge;|V|, which it would be for most graphs. This implies that |V|+|E|&le;|E|+|E|=2 *|E|. With our assumption we now see that |E|&ge;|V| and thus O(V+E) is the same as O(E) for large sets. However, if |V|&g;|E|, then |V|+|E|&le;|V|+|V|=2*|V|, then O(V+E) is the same as O(V)! By putting both cases together we get O(V+E).  </p>
 
 ### DFS example
 Added a DFS example
