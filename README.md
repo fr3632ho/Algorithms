@@ -9,7 +9,7 @@ One O(n<sup>2</sup>) solution to the stable marriage problem, with the Gale-Shap
 * <p>Assume we have a male-optimal matching A and if for any male m we have a stable solution C, A(m) &ge; C(m). Assume we also have a matching B which is male-pessimal and if for any male m we have a stable solution C, C(m) &ge; B(m). Now assume A = B, which implies that A(m) &ge; C(m) &ge; B(m) = A(m). Then A = C and the solution is unique.</p>
 
 ### Word Ladders
-<p>Graphing problem. Find the length of the shortest path between any nodes a,b &isin; G </p>
+<p>Graphing problem. Find the length of the shortest path between any nodes a,b &isin; G. Implemented soultion is done with the help of the BFS algorithm. </p>
 
 ### DFS example
 Added a DFS example
