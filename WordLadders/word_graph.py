@@ -2,6 +2,7 @@ import sys
 import time
 from collections import deque
 
+N,Q = 0,0
 '''
 # Description: Parses the given file and seperates the input into two lists; A word
   list and a queries list.
@@ -22,27 +23,25 @@ def parse_data():
 # Returns: The graph containing all vertices and their outgoing edges.
 '''
 def setup_graph(words):
-    copy = words.copy()
     graph = dict()
     for key in words:
         graph.setdefault(key,[])
 
-    for i in range(len(copy)):
-        for j in range(len(copy)):
+    for i in range(len(words)):
+        for j in range(len(words)):
             if j != i:
                 count = 0
-                word1,word2 = list(copy[i]),list(copy[j])
+                word1,word2 = list(words[i]),list(words[j])
                 for w1 in word1[1:]:
                     prev_count = count
                     for w2 in word2:
                         if prev_count != count:
-                            continue
+                            break
                         elif w1 == w2:
                             word2[word2.index(w2)] = -1
                             count += 1
-                    string_word1 = "".join(word1)
                     if count >= 4:
-                        graph[string_word1].append(copy[j])
+                        graph[words[i]].append(words[j])
     return graph
 
 '''
@@ -74,4 +73,7 @@ def run():
         print(BFS(graph,query[0],query[1]))
     #print(f'TOTAL RUN TIME: {(time.perf_counter_ns() - start)/10**9 }')
 
+
 run()
+
+#print({'a','b','c','d'}.issubset({'a','c','b','d','e'}))
