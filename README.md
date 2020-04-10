@@ -16,9 +16,8 @@ One O(n<sup>2</sup>) solution to the stable marriage problem, with the Gale-Shap
 *  What is the time complexity, and why? Say for the graph that we have the vertex set V and edge set E the time complexity for BFS would be O(V+E). Let's assume that |E| &ge; |V|, which it would be for most graphs. This implies that |V|+|E| &le; |E|+|E|=2 *|E|. With our assumption we now see that |E| &ge; |V| and thus O(V+E) is the same as O(E) for large sets. However, if |V| > |E|, then |V|+|E| &le; |V|+|V|=2*|V|, then O(V+E) is the same as O(V)! By putting both cases together we get O(V+E). 
 
 * Is it possible to solve the problem with DFS: why or why not? The problem of wordladders would be solveable by a DFS, however it would be drastically slower than using BFS because DFS searches one path at a time, exploring the path until it reaches a dead end. Then rince and repeat. This can be quite time consuming and not ideal for a quick solution.
-* Can you think of any applications of this? Of BFS/DFS in general? Checking flight connections between cities. For instance, locating the most optimal path for a customer traveling from point A to point B with as few stops as possible. Each level of BFS is then represented as one more step away from the city of departure.
+* Can you think of any applications of this? Of BFS/DFS in general? Checking flight connections between cities. For instance, locating the most optimal path for a customer traveling from point A to point B with as few stops as possible. Each level of BFS is then represented as one more step away from the city of departure.</p>
 
-</p>
 ### Making Friends
 Minimal Spanning Tree implementation
 
