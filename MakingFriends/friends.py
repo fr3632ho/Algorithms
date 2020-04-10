@@ -43,8 +43,11 @@ def prim(G,root):
 
     return total_weight
 
-G = parse_data()
-print(prim(G,1))
+def run():
+    G = parse_data()
+    print(prim(G,1))
+
+run()
 
 
 
