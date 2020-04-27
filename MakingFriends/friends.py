@@ -10,11 +10,9 @@ def parse_data():
     data = sys.stdin.read().strip().split('\n')
     data = [[int(x) for x in line.split(' ')] for line in data]
     graph = defaultdict(list)
-    heap = []
     for frm,to,cost in data[1:]:
         graph[frm].append((to,cost))
         graph[to].append((frm,cost))
-
     return graph # N, M, data
 
 '''
@@ -40,7 +38,6 @@ def prim(G,root):
             for n,cost in G[u]:
                 if n not in V:
                     heapq.heappush(Q,(cost,n))
-
     return total_weight
 
 def run():
@@ -48,12 +45,3 @@ def run():
     print(prim(G,1))
 
 run()
-
-
-
-
-
-
-
-
-#END
