@@ -24,9 +24,7 @@ Returns: A total weight of all edges for the MST.
 def prim(G,root):
     #Q := Unexplored vertices, V:= Explored vertices
     total_weight = 0
-    Q = [(0,root)]
-    V = set()
-
+    Q,V = [(0,root)],set()
     while Q:
         weight,u = heapq.heappop(Q)
         # If vertex u is already explored then continue
