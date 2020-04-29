@@ -13,7 +13,7 @@ def closest_points():
     print(format(closest(px,py,len(p)),'.6f'))
 
 '''
-Finds the closest pair in a 2D plane given two sorted lists, one on sorted by X and the other on y.
+Finds the closest pair in a 2D plane given two sorted lists, one sorted by x and the other by y.
 Returns the distance between the closest pair!
 '''
 def closest(px,py,n):
