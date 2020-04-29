@@ -3,13 +3,19 @@ from math import sqrt,pow
 
 def distance(i,j):
     return sqrt(pow(i[0] - j[0],2) + pow(i[1]-j[1],2))
-
+'''
+Processes data and calls on the closest method producing the result
+'''
 def closest_points():
     data = sys.stdin.read().rstrip('\n').split('\n')
     p = [[int(x) for x in line.split(' ')] for line in data[1:]]
     px,py = sorted(p,key=lambda x:x[0]),sorted(p,key=lambda x:x[1])
     print(format(closest(px,py,len(p)),'.6f'))
 
+'''
+Finds the closest pair in a 2D plane given two sorted lists, one on sorted by X and the other on y.
+Returns the distance between the closest pair!
+'''
 def closest(px,py,n):
     if n <= 3:
         delta = sys.maxsize
