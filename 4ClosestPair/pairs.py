@@ -7,8 +7,12 @@ def distance(i,j):
 Processes data and calls on the closest method producing the result
 '''
 def closest_points():
-    data = sys.stdin.read().split('\n')
-    p = [[int(x) for x in line.split(' ')] for line in data[1:-1]]
+    p = []
+    n = int(input())
+    for i in range(n):
+        temp = input().split()
+        x,y = int(temp[0]),int(temp[1])
+        p.append((x,y))
     px,py = sorted(p,key=lambda x:x[0]),sorted(p,key=lambda x:x[1])
     print(format(closest(px,py,len(p)),'.6f'))
 
@@ -17,39 +21,27 @@ Finds the closest pair in a 2D plane given two sorted lists, one sorted by x and
 Returns the distance between the closest pair!
 '''
 def closest(px,py,n):
-    if n <= 3:
-        delta = sys.maxsize
-        for i in px:
-            for j in px:
-                dist = distance(i,j)
-                if dist < delta and dist != 0:
-                    delta = dist
-        return delta
+    if n == 3:
+        return min(distance(px[0],px[1]),distance(px[0],px[2]),distance(px[1],px[2]))
+    elif n == 2:
+        return distance(px[0],px[1])
     else:
         mid = n//2
         Lx,Rx = px[:mid],px[mid:]
         Ly,Ry = py[:mid],py[mid:]
         delta = min( closest(Lx,Ly,len(Lx)), closest(Rx,Ry,len(Rx)) )
-
         S = []
-        r,l = py[mid][1] + delta,py[mid][1] - delta
-        for i in py[mid::-1]:
-            if i[1] < l:
-                break
-            S.append((i[0],i[1]))
-
-        for i in py[mid:]:
-            if i[1] > r:
-                break
-            S.append((i[0],i[1]))
+        l,r = py[mid][1] - delta,py[mid][1] + delta
+        for y in py:
+            if l <= y[1] <= r:
+                S.append(y)
 
         for i in range(0,len(S)):
             for j in range(i+1,i+7):
                 if len(S) == j:
                     break
-                dist = distance(S[i],S[j])
-                if dist < delta and dist != 0:
-                    delta = dist
+                if S[i] != S[j]:
+                    delta = min(delta,distance(S[i],S[j]))
         return delta
 
 closest_points()
