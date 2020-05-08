@@ -27,7 +27,13 @@ Proof of correctness: The proof is by contradiction, so assume we say that S is 
 
 Let e<sub>i</sub> = (x,y) be the first edge added to S by prims that is not in U, and let W be the set of vertices immediately before e<sub>i</sub> is selected. Notice that it follows that U contains the edges (e<sub>1</sub>, e<sub>2</sub>, ..., e<sub>i-1</sub>) but not edge e<sub>i</sub>. There must be a path from x &rarr; y in U. Let (a,b) be the first edge on this path where a is inside W and b is outside. Now, define the set of edges T = U + {(x,y) - (a,b)}, and notice that T is a spanning tree for graph G. Then consider three possible cases for the weights of edges (x,y) and (a,b).
 
-case one: w(a,b) &ge;
+case one: w((a,b)) > w((x,y)). In this case, we have added a weight that has smaller weight than the one we removed, and so w(T) < w(U). This is however impossible since U is a minimal spanning tree.
+
+case two: w((a,b)) = w((x,y)). In this case w(T) = w(U), so T is also a minimal spanning tree. Furthermore, since prims algorithm hasn't selected edge (a,b) yet, that edge cannot be in (e<sub>1</sub>, e<sub>2</sub>, ..., e<sub>i-1</sub>). This implies that T contains edges (e<sub>1</sub>, e<sub>2</sub>, ..., e<sub>i</sub>) which is a longer prefix of sequence ES than U contains. This contradicts the definitions of tree U.
+
+case three: w((a,b)) < w((x,y)). In this case, since edge weight (a,b) is smaller, prims algorithm will select (a,b) at this step. This contradicts the defintion of edge (x,y).
+
+Since all possible cases led to contradictions, our first assumption must be invalid, that S is not in fact a minimal spanning tree. This proves the theorem. &25A2;
  
 * Possible applications, with some modifications to the algorithm, it can be used to construct optimal networks between nodes. For instance a power grid distributing electricity to cities and minimizing cost at the same time. With the costs as the edge relations an MST can be constructed.
 
