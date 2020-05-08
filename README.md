@@ -35,10 +35,10 @@ case three: w((a,b)) < w((x,y)). In this case, since edge weight (a,b) is smalle
 
 Since all possible cases led to contradictions, our first assumption must be invalid, that S is not in fact a minimal spanning tree. This proves the theorem. &#9634;
  
-* Possible applications, with some modifications to the algorithm, it can be used to construct optimal networks between nodes. For instance a power grid distributing electricity to cities and minimizing cost at the same time. With the costs as the edge relations an MST can be constructed.
+* Possible applications, with some modifications to the algorithm, it can be used to construct optimal networks between nodes. For instance a power grid distributing electricity to cities and minimizing cost at the same time. With the costs as the edge relations an MST can be constructed.</p>
 
-  
-</p>
+### Closest Points
+Problem formulation is the following. Find the two closest points in a 2D plane in O(nlogn) time. This makes use of idiomatic divide & conquer algorithm.
 
 ### DFS example
 Added a DFS example
