@@ -64,3 +64,12 @@ if __name__ == "__main__":
     print('\nNodes: {}\nEdges: {}\nStudents: {}\nPaths to remove: {}\nSource: {}\nSink: {}\n'.format(N,M,C,paths,source,sink))
     print("Graph containig:")
     [print(f'Node {i} => {G[i]}') for i in G]
+
+
+
+
+
+
+
+
+# END
