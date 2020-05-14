@@ -32,13 +32,20 @@ def BFS(G,source,sink,N):
             continue
 
         discovered.add(node)
-        for neighbour in G[node]:
-            if neighbour[1] not in discovered:
+        for flow,neighbour in G[node]:
+            if neighbour not in discovered:
                 # Set parent
-                parents[neighbour[1]] = node
-                queue.appendleft(neighbour[1])
+                parents[neighbour] = node
+                queue.appendleft(neighbour)
 
     return paths
+
+'''
+Adds an edge to an undirected graph
+'''
+def add_edge(G,u,v,flow):
+    G[u].append((flow,v))
+    G[v].append((flow,u))
 
 if __name__ == "__main__":
     # Parsing of data
@@ -51,8 +58,8 @@ if __name__ == "__main__":
             source = i[0]
         if j == M-1:
             sink = i[0]
-        G[i[0]].append((i[2],i[1]))
-        G[i[1]].append((i[2],i[0]))
+        add_edge(G,i[0],i[1],i[2])
+
     paths = [i[0] for i in data[M+1:]]
 
     found_paths = BFS(G,source,sink,N)
