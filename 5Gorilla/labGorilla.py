@@ -30,17 +30,17 @@ def parse_data():
 
 		# Size of strings inside query
 		n, m = len(s), len(t)
+		k = max(n,m)
+		dp = [[0 for x in range(k + 1)] for y in range(k + 1)]
 
-		dp = [[-50000 for x in range(n + m + 1)] for y in range(m + n + 1)]
-
-		for i in range(n + m + 1):
+		for i in range(k + 1):
 			dp[0][i] = penalty * i
 			dp[i][0] = penalty * i
 
 		for i in range(1,n+1):
 			for j in range(1,m+1):
 
-				# Score var
+				# Alignment cost
 				alfa = matrix[s[i - 1]][t[j - 1]]
 
 				dp[i][j] = max(
@@ -56,10 +56,6 @@ def parse_data():
 		xs = [0]*(l + 1)
 		xpos = l
 		ypos = l
-
-		# for row in dp:
-		# 	print(row)
-
 
 		while not (i == 0 or j == 0):
 
@@ -109,7 +105,7 @@ def parse_data():
 			ypos -= 1
 
 		id = 1
-		for i in range(min(len(xs), len(ys)), 0, -1):
+		for i in range(l, 0, -1):
 			if ys[i - 1] == '*' and xs[i - 1] == '*':
 				id = i
 				break
