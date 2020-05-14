@@ -59,18 +59,6 @@ def parse_data():
 
 		while not (i == 0 or j == 0):
 
-			# print(f's[i - 1] = {s[i - 1]}' )
-			# print(f't[j - 1] = {t[j - 1]}' )
-			# print(f't = {t}' )
-			# print(f's = {s}' )
-			# print(f'xs = {xs}' )
-			# print(f'dp[{i}][{j}] = {dp[i][j]} \n' )
-
-			# if s[i - 1] == t[j - 1]:
-			# 	xs[xpos] = s[i - 1]
-			# 	ys[ypos] = t[j - 1]
-			# 	xpos, ypos, i, j = dec(1, xpos, ypos, i, j)
-
 			if (dp[i - 1][j - 1] + matrix[s[i - 1]][t[j - 1]]) == dp[i][j]:
 				xs[xpos] = s[i - 1]
 				ys[ypos] = t[j - 1]
