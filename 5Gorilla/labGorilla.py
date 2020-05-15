@@ -1,5 +1,6 @@
 #!/bin/python3
 
+# import numpy
 import sys
 
 def parse_data():
@@ -10,7 +11,7 @@ def parse_data():
 	dim = range(len(alphabet))
 
 	# Cost matrix for aligning i with j
-	cost_matrix = [[int(j) for j in i.split()] for i in x[1:len(alphabet)+1]]
+	cost_matrix = [[int(j) for j in i.split()] for i in x[1:len(alphabet) + 1]]
 
 	# Alignment matrix map -> matrix['A']['C'] = -3
 	matrix = {}
@@ -21,8 +22,6 @@ def parse_data():
 
 	# Queries to be evaluated. queries[0] = ['String1', 'String2']
 	queries = [[j for j in i.split()] for i in x[len(alphabet)+2:len(x) - 1]]
-
-	# print(f'Finished parsing data, got the following queries: {queries} & alphabet: {alphabet}')
 
 	# Looping over queries
 	for query in queries:
@@ -53,6 +52,7 @@ def parse_data():
 		xs = [0]*(l + 1)
 		xpos = l
 		ypos = l
+		
 
 		while not (i == 0 or j == 0):
 			if (dp[i - 1][j - 1] + matrix[s[i - 1]][t[j - 1]]) == dp[i][j]:
@@ -93,8 +93,7 @@ def parse_data():
 			if ys[i - 1] == '*' and xs[i - 1] == '*':
 				id = i
 				break
-
-		print("".join(xs[id:]), "".join(ys[id:]))                	
+		print("{} {}".format("".join(xs[id:]), "".join(ys[id:])))
 
 def dec(val, *args):
 	for i in args:
