@@ -11,7 +11,7 @@ def parse_data():
 
 	# Cost matrix for aligning i with j
 	cost_matrix = [[int(j) for j in i.split()] for i in x[1:len(alphabet)+1]]
-	
+
 	# Alignment matrix map -> matrix['A']['C'] = -3
 	matrix = {}
 	for i in range(len(alphabet)):
@@ -27,20 +27,19 @@ def parse_data():
 	# Looping over queries
 	for query in queries:
 		s, t = query[0], query[1]
-		
 		# Size of strings inside query
 		n, m = len(s), len(t)
+		k = max(n,m)
+		dp = [[0 for x in range(k + 1)] for y in range(k + 1)]
 
-		dp = [[0 for x in range(n + m + 1)] for y in range(m + n + 1)]
-
-		for i in range(n + m + 1):
+		for i in range(k + 1):
 			dp[0][i] = penalty * i
 			dp[i][0] = penalty * i
-		
+
 		for i in range(1,n+1):
 			for j in range(1,m+1):
 
-				# Score var
+				# Alignment cost
 				alfa = matrix[s[i - 1]][t[j - 1]]
 
 				dp[i][j] = max(
@@ -74,8 +73,8 @@ def parse_data():
 		while xpos > 0:
 			if i > 0:
 				xs[xpos] = s[i - 1]
-				i -= 1 
-			else: 
+				i -= 1
+			else:
 				xs[xpos] = '*'
 
 			xpos -= 1
@@ -90,13 +89,13 @@ def parse_data():
 			ypos -= 1
 
 		id = 1
-		for i in range(min(len(xs), len(ys)), 0, -1):
+		for i in range(l, 0, -1):
 			if ys[i - 1] == '*' and xs[i - 1] == '*':
 				id = i
 				break
 
-		print("".join(xs[id:]), "".join(ys[id:]))                
-	
+		print("".join(xs[id:]), "".join(ys[id:]))                	
+
 def dec(val, *args):
 	for i in args:
 		yield i - val

@@ -19,7 +19,26 @@ One O(n<sup>2</sup>) solution to the stable marriage problem, with the Gale-Shap
 * Can you think of any applications of this? Of BFS/DFS in general? Checking flight connections between cities. For instance, locating the most optimal path for a customer traveling from point A to point B with as few stops as possible. Each level of BFS is then represented as one more step away from the city of departure.</p>
 
 ### Making Friends
-Minimal Spanning Tree implementation
+<p>Implementation of a minimal spanning tree given nodes V and edge relations E. Constructs the MST and returns the minimal total edge weight of the tree. Problem solved using prims algorithm with a min-heap. Prims algorithm runs i O(E + log(V)) time and with a proof of correctness we can show that this is the case.
+ 
+<u>Theorem</u>: If S is the spanning tree selected by prims algorithm for input G = (V,E), then S is a minimum spanning tree for G.
+
+<u>Proof of correctness</u>: The proof is by contradiction, so assume we say that S is not of minimum weight produced by prims algorithm. Let ES = (e<sub>1</sub>, e<sub>2</sub>, ..., e<sub>n-1</sub> be the sequence of edges chosen by prims, in this order, and let U be the MST that contains edges from the longest possible prefix of sequence ES.
+
+Let e<sub>i</sub> = (x,y) be the first edge added to S by prims that is not in U, and let W be the set of vertices immediately before e<sub>i</sub> is selected. Notice that it follows that U contains the edges (e<sub>1</sub>, e<sub>2</sub>, ..., e<sub>i-1</sub>) but not edge e<sub>i</sub>. There must be a path from x &rarr; y in U. Let (a,b) be the first edge on this path where a is inside W and b is outside. Now, define the set of edges T = U + {(x,y) - (a,b)}, and notice that T is a spanning tree for graph G. Then consider three possible cases for the weights of edges (x,y) and (a,b).
+
+case one: w((a,b)) > w((x,y)). In this case, we have added a weight that has smaller weight than the one we removed, and so w(T) < w(U). This is however impossible since U is a minimal spanning tree.
+
+case two: w((a,b)) = w((x,y)). In this case w(T) = w(U), so T is also a minimal spanning tree. Furthermore, since prims algorithm hasn't selected edge (a,b) yet, that edge cannot be in (e<sub>1</sub>, e<sub>2</sub>, ..., e<sub>i-1</sub>). This implies that T contains edges (e<sub>1</sub>, e<sub>2</sub>, ..., e<sub>i</sub>) which is a longer prefix of sequence ES than U contains. This contradicts the definitions of tree U.
+
+case three: w((a,b)) < w((x,y)). In this case, since edge weight (a,b) is smaller, prims algorithm will select (a,b) at this step. This contradicts the defintion of edge (x,y).
+
+Since all possible cases led to contradictions, our first assumption must be invalid, that S is not in fact a minimal spanning tree. This proves the theorem. &#9634;
+ 
+* Possible applications, with some modifications to the algorithm, it can be used to construct optimal networks between nodes. For instance a power grid distributing electricity to cities and minimizing cost at the same time. With the costs as the edge relations an MST can be constructed.</p>
+
+### Closest Points
+Problem formulation is the following. Find the two closest points in a 2D plane in O(nlogn) time. This makes use of idiomatic divide & conquer algorithm.
 
 ### DFS example
 Added a DFS example

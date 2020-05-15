@@ -1,0 +1,20 @@
+### Network Flow
+
+Ford Fulkerson, Tarjans Algorithm for strongly connected components
+
+Flow from S -> T in a directed graph G(V,E)
+
+Räkna med snitt, A,B snitt är en mängd V = A u B, där A och B aldrig har några
+gemensamma noder.
+
+Flödet kan aldrig bli mer än vad ett ST snitt har kapacitet för, dvs de kanter
+som går ut från nod S.
+
+för v tillhör V - {S,T} gäller att summan av f(e), där e in till v, är lika med summan av f(e) där e ut från v.
+Goldberg-Tarjan and pre-flows.
+
+I fulkerson finns det bara riktiga flöden.
+
+Använd BFS sökning för att hitta vägar mellan S och T.
+
+Residualgrafer, betecknas med f => Gf.
