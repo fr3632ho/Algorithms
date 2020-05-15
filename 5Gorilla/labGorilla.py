@@ -31,7 +31,7 @@ def parse_data():
 		# Size of strings inside query
 		n, m = len(s), len(t)
 
-		dp = [[-50000 for x in range(n + m + 1)] for y in range(m + n + 1)]
+		dp = [[0 for x in range(n + m + 1)] for y in range(m + n + 1)]
 
 		for i in range(n + m + 1):
 			dp[0][i] = penalty * i
@@ -48,8 +48,6 @@ def parse_data():
 						dp[i - 1][j] + penalty,
 						dp[i][j - 1] + penalty)
 
-
-
 		l = n + m
 		i, j = n, m
 		ys = [0]*(l + 1)
@@ -57,24 +55,7 @@ def parse_data():
 		xpos = l
 		ypos = l
 
-		# for row in dp:
-		# 	print(row)
-
-
 		while not (i == 0 or j == 0):
-
-			# print(f's[i - 1] = {s[i - 1]}' )
-			# print(f't[j - 1] = {t[j - 1]}' )
-			# print(f't = {t}' )
-			# print(f's = {s}' )
-			# print(f'xs = {xs}' )
-			# print(f'dp[{i}][{j}] = {dp[i][j]} \n' )
-
-			# if s[i - 1] == t[j - 1]:
-			# 	xs[xpos] = s[i - 1]
-			# 	ys[ypos] = t[j - 1]
-			# 	xpos, ypos, i, j = dec(1, xpos, ypos, i, j)
-
 			if (dp[i - 1][j - 1] + matrix[s[i - 1]][t[j - 1]]) == dp[i][j]:
 				xs[xpos] = s[i - 1]
 				ys[ypos] = t[j - 1]
@@ -85,7 +66,7 @@ def parse_data():
 				ys[ypos] = '*'
 				xpos, ypos, i = dec(1, xpos, ypos, i)
 
-			else:# (penalty + dp[i][j - 1]) == dp[i][j]:
+			else:
 				xs[xpos] = '*'
 				ys[ypos] = t[j - 1]
 				xpos, ypos, j = dec(1, xpos, ypos, j)
@@ -114,7 +95,7 @@ def parse_data():
 				id = i
 				break
 
-		print("".join(xs[id:]), "".join(ys[id:]))
+		print("".join(xs[id:]), "".join(ys[id:]))                
 	
 def dec(val, *args):
 	for i in args:
