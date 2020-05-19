@@ -1,5 +1,14 @@
+#!/usr/bin/env python3
+
 import sys
+import networkx
 from collections import defaultdict,deque
+import copy
+
+# N = number of nodes (cities)
+# M = number of edges (connections between cities)
+# C = number of students (to transport between cities)
+# P = number of routes
 
 '''
 Finds the path from the sink to the parent of the parents
@@ -15,68 +24,88 @@ def findPath(node, parents):
 '''
 Shortest path BFS for now, this will be needed for the lab
 '''
-def BFS(G,source,sink,N):
-    if source == sink:
-        return []
-    discovered,queue = {source}, deque([source])
 
-    paths = []
-    parents = [-1]*N
+def BFS(G, s, t, p):
+    discovered = {}
+    q = deque([(s, sys.maxsize)])
+    while q:
+        cur, flow = q.pop()
 
-    while queue:
+        for n in G[cur].keys():
+            if p[n] == -1 and G[cur][n] > 0:
+                p[n] = cur
+                new_flow = min(G[cur][n], flow)
+                if n == t:
+                    return new_flow
 
-        node = queue.pop();
+                q.appendleft((n, new_flow))
 
-        if node == sink:
-            paths.append(findPath(node,parents))
-            continue
+    return 0
 
-        discovered.add(node)
-        for flow,neighbour in G[node]:
-            if neighbour not in discovered:
-                # Set parent
-                parents[neighbour] = node
-                queue.appendleft(neighbour)
+def max_flow(G, s, t, N):
+    flow_tot = 0
+    parents = [-1] * N
+    new_flow = 0
 
-    return paths
+    while new_flow := BFS(G, s, t, parents):
+        flow_tot += new_flow
+        cur = t
+        while cur != s:
+            prev = parents[cur]
+
+            G[prev][cur] -= new_flow
+            G[cur][prev] += new_flow
+            cur = prev
+
+        parents = [-1]*N
+
+    return flow_tot
+
+def zero_flow(G,u,v):
+    G[u][v] = 0
+    G[v][u] = 0
+
 
 '''
 Adds an edge to an undirected graph
 '''
 def add_edge(G,u,v,flow):
-    G[u].append((flow,v))
-    G[v].append((flow,u))
+    G[u][v] = flow
+    G[v][u] = flow
 
 if __name__ == "__main__":
+
     # Parsing of data
     data = [[int(i) for i in line.strip('\n').split()] for line in sys.stdin]
-    N,M,C,P = data[0]
+    N, M, C, P = data[0]
     source = sink = 0
-    G = defaultdict(list)
-    for j,i in enumerate(data[1:M+1]):
-        if j == 0:
-            source = i[0]
-        if j == M-1:
-            sink = i[0]
+    
+    G = defaultdict(dict)
+    source,sink = 0, N-1
+    edge_ord = []
+
+    for i in data[1:M+1]:
         add_edge(G,i[0],i[1],i[2])
+        edge_ord.append((i[0],i[1]))
 
     paths = [i[0] for i in data[M+1:]]
 
-    found_paths = BFS(G,source,sink,N)
 
-    print('Found paths, with condition that stepping back to a discovered node is prohibited')
-    for path in found_paths:
-        print(list(path))
+    Gr = copy.deepcopy(G)
+    flow = 20
+    new_flow = flow
+    i = 0
+    while new_flow >= C and P > i:
+        Gr = copy.deepcopy(G)
+                
+        flow = new_flow
+        u,v = edge_ord[paths[i]]
+        
+        zero_flow(Gr,u,v)
+        G = copy.deepcopy(Gr)
+        new_flow = max_flow(Gr,source,sink,N)
+        
+        i+=1
 
-    print('\nNodes: {}\nEdges: {}\nStudents: {}\nPaths to remove: {}\nSource: {}\nSink: {}\n'.format(N,M,C,paths,source,sink))
-    print("Graph containig:")
-    [print(f'Node {i} => {G[i]}') for i in G]
 
-
-
-
-
-
-
-
-# END
+    print(i-1,flow)
