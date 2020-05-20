@@ -8,42 +8,60 @@ import copy
 # M = number of edges (connections between cities)
 # C = number of students (to transport between cities)
 # P = number of routes
+
+'''
+Finds the path from the sink to the parent of the parents
+'''
+def findPath(node, parents):
+    path = deque([node])
+    root = node
+    while parents[root] != -1:
+        root = parents[root]
+        path.appendleft(root)
+    return path
+
 '''
 Shortest path BFS for now, this will be needed for the lab
 '''
-def BFS(G, s, t, p):
+def BFS(G, s, t, p, i):
     discovered = {}
     q = deque([(s, sys.maxsize)])
+    #print(i)
+    #C_i = sum([G[s][x] for x in G[s]]) // pow(2,i)
+    #print(C_i)
 
     while q:
         cur, flow = q.pop()
+
         for n in G[cur].keys():
             if p[n] == -1 and G[cur][n] > 0:
                 p[n] = cur
                 new_flow = min(G[cur][n], flow)
                 if n == t:
                     return new_flow
+
                 q.appendleft((n, new_flow))
 
     return 0
 
-'''
-Ford Fulkerson for max flow in a graph
-'''
 def max_flow(G, s, t, N):
     flow_tot = 0
-    parents = [-1]*N
-    # terminates before max flow is found for the graph
-    while new_flow := BFS(G, s, t, parents):
+    parents = [-1] * N
+    new_flow = sys.maxsize
+    i = 1
+    while (new_flow := BFS(G, s, t, parents, i)):
         flow_tot += new_flow
         cur = t
         while cur != s:
             prev = parents[cur]
+            #print(prev,cur)
+
             G[prev][cur] -= new_flow
             G[cur][prev] += new_flow
             cur = prev
 
         parents = [-1]*N
+        i += 1
 
     return flow_tot
 
@@ -62,28 +80,24 @@ def add_edge(G,u,v,flow):
     G[v][u] = flow
 
 '''
-Fins a flow in the graph recursively which satisfies the needed flow C
 '''
-def binary_search_flow(G, l, r):
-    global N, C, source, sink, edge_ord, paths
-    if r >= l:
-        mid = l + (r-l)//2
-        Gr = copy.deepcopy(G)
+def calc_flow(G,edge_order,paths,N,C,P,source,sink):
+    Gr = copy.deepcopy(G)
 
-        for i in range(0,len(paths[:mid])):
-            u,v = edge_ord[paths[i]]
-            zero_flow(Gr,u,v)
-        # Current flow in Residual graph with edges unitl paths[:mid] removed
-        flow = max_flow(Gr, source, sink, N)
-        if flow >= C:
-            binary_search_flow(G, mid + 1, r)
-        else:
-            binary_search_flow(G, l, mid-1)
-    else:
-        for i in range(0, len(paths[:r])):
-            u,v = edge_ord[paths[i]]
-            zero_flow(G,u,v)
-        print(len(paths[:l])-1, max_flow(G,source, sink, N))
+    i = 0
+    flow = sys.maxsize
+    prev_flow = flow
+    while flow >= C and P > i:
+        u,v = edge_order[paths[i]]
+        zero_flow(Gr,u,v)
+        G = copy.deepcopy(Gr)
+
+        prev_flow = flow
+        flow = max_flow(G,source,sink,N)
+
+        i += 1
+
+    print(i-1,prev_flow)
 
 '''
 1. Calculate flow through original graph
@@ -92,8 +106,7 @@ def binary_search_flow(G, l, r):
 4. Repeat 2 and 3 till the conditions are broken
 '''
 if __name__ == "__main__":
-    global G, N, C, P, source, sink
-    global paths, edge_ord
+
     # Parsing of data
     data = [[int(i) for i in line.strip('\n').split()] for line in sys.stdin]
     N, M, C, P = data[0]
@@ -108,4 +121,5 @@ if __name__ == "__main__":
         edge_ord.append((i[0],i[1]))
 
     paths = [i[0] for i in data[M+1:]]
-    binary_search_flow(G,0,len(paths)-1)
+
+    calc_flow(G,edge_ord, paths, N, C, P, source, sink)
