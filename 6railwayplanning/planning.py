@@ -65,7 +65,6 @@ def binary_search_flow(G, l, r):
         mid = l + (r-l)//2
         Gr = copy.deepcopy(G)
         zero_flows(Gr, edge_ord, paths, mid)
-        # Current flow in Residual graph with edges unitl paths[:mid] removed
         flow = max_flow(Gr, source, sink, N)
         if flow >= C:
             binary_search_flow(G, mid + 1, r)
