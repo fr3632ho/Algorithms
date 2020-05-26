@@ -1,125 +1,174 @@
-#!/usr/bin/env python3
-import sys
-from math import pow
-from collections import defaultdict,deque
-import copy
+import sys, copy, time
+from collections import defaultdict, deque
 
-# N = number of nodes (cities)
-# M = number of edges (connections between cities)
-# C = number of students (to transport between cities)
-# P = number of routes
+nbr_nodes, nbr_edges, min_tot_flow, nbr_routes, routes_to_remove, source, sink, capacities, graph, mid, max_flow, last_valid = [0]*12
 
-'''
-Finds the path from the sink to the parent of the parents
-'''
-def findPath(node, parents):
-    path = deque([node])
-    root = node
-    while parents[root] != -1:
-        root = parents[root]
-        path.appendleft(root)
+
+class Graph:  # A residual graph
+
+    def __init__(self):
+        self.nodes = defaultdict(dict)
+        self.index_of_index = {}
+        self.edges_by_index = defaultdict(list)
+        self.edge_count = 0
+        self.opposite_edges = {}
+
+    def add_edge(self, start, stop, capacity):
+        edge1 = self.Edge(start, stop, capacity)
+        edge2 = self.Edge(stop, start, capacity)
+        self.nodes[start].update({self.edge_count : edge1})
+        self.nodes[stop].update({self.edge_count : edge2})
+        self.edges_by_index[self.edge_count] = (edge1, edge2)
+
+        self.opposite_edges[edge1] = edge2
+        self.opposite_edges[edge2] = edge1
+        self.edge_count += 1
+
+    def get_opposite_edge(self, edge):
+        return self.opposite_edges[edge]
+
+    def remove_edge(self, index): # För hög komplexitet, byta listorna av edge1 o edge2 så vi kan indexera och ta bort
+        edges = self.edges_by_index[index]
+        del self.nodes[edges[0].start][index]
+        del self.nodes[edges[1].start][index]
+        self.edge_count -= 1
+
+    def remove_up_to(self, nbr_edges):
+        for i, route_index in enumerate(routes_to_remove):
+            if i == nbr_edges:
+                break
+            self.remove_edge(route_index)
+
+    def reset_graph(self):  # För hög komplexitet tror jag
+        for edges in graph.nodes.values().values():
+            for edge in edges:
+                edge.flow = 0
+
+    def get_max_flow(self):
+        max_flow = 0
+        while path := bfs(self, source, sink):
+            self.update_flow(path)
+            max_flow = self.calculate_max_flow()
+
+        return max_flow
+
+    def calculate_max_flow(self):
+        return sum([edge.flow for edge in self.nodes[source].values()]) + sum(
+            [self.get_opposite_edge(edge).flow for edge in self.nodes[source].values()])
+
+    def update_flow(self, path):
+        min_capacity = sys.maxsize
+
+        for edge in path:
+            if (edge.capacity - edge.flow) < min_capacity:  # Här va felet, stod edge.capacity, och inte capacity - flow
+                min_capacity = edge.capacity - edge.flow  # Samma här
+
+        for edge in path:
+            edge.flow += min_capacity
+            self.get_opposite_edge(edge).capacity -= min_capacity
+
+    def connected_edges(self, current_edge):
+        return self.nodes[current_edge.stop].values()
+
+    class Edge:
+
+        def __init__(self, start, stop, capacity):
+            self.start = start
+            self.stop = stop
+            self.capacity = capacity
+            self.predecessor = None
+            self.flow = 0
+
+
+
+
+def parse_data(data):
+    global nbr_nodes, nbr_edges, min_tot_flow, nbr_routes, routes_to_remove, source, sink, graph
+
+    data_list = data.strip().replace('\n', ' ').split()
+    data_list = [int(i) for i in data_list]
+    nbr_nodes, nbr_edges, min_tot_flow, nbr_routes = data_list[:4]
+
+    graph = Graph()
+    routes_to_remove = []
+
+    for i in range(4, len(data_list) - nbr_routes, 3):
+        graph.add_edge(data_list[i], data_list[i + 1], data_list[i + 2])
+
+    routes_to_remove = data_list[len(data_list) - nbr_routes:]
+    source = 0
+    sink = nbr_nodes - 1
+
+
+def backtrack_route(current_edge):
+    path = [current_edge]
+    while current_edge.predecessor:
+        path.append(current_edge.predecessor)
+        current_edge = current_edge.predecessor
     return path
 
-'''
-Shortest path BFS for now, this will be needed for the lab
-'''
-def BFS(G, s, t, p, i):
-    discovered = {}
-    q = deque([(s, sys.maxsize)])
-    #print(i)
-    #C_i = sum([G[s][x] for x in G[s]]) // pow(2,i)
-    #print(C_i)
 
-    while q:
-        cur, flow = q.pop()
+def is_full(edge):
+    return edge.capacity <= edge.flow
 
-        for n in G[cur].keys():
-            if p[n] == -1 and G[cur][n] > 0:
-                p[n] = cur
-                new_flow = min(G[cur][n], flow)
-                if n == t:
-                    return new_flow
 
-                q.appendleft((n, new_flow))
+def bfs(graph, start, end):
+    if source == sink or graph.edge_count == 0:
+        return
+    edges_visited = {}
+    for node in graph.nodes:
+        for edge in graph.nodes[node].values():
+            edges_visited[edge] = False  # O(n)
 
-    return 0
+    # edges_visited[graph.nodes[source]] = True
+    edges_to_visit = deque([edge for edge in graph.nodes[source].values() if not is_full(edge)])
+    for edge in graph.nodes[source].values():
+        edges_visited[edge] = True
 
-def max_flow(G, s, t, N):
-    flow_tot = 0
-    parents = [-1] * N
-    new_flow = sys.maxsize
-    i = 1
-    while (new_flow := BFS(G, s, t, parents, i)):
-        flow_tot += new_flow
-        cur = t
-        while cur != s:
-            prev = parents[cur]
-            #print(prev,cur)
+    while edges_to_visit:
+        current_edge = edges_to_visit.pop()
+        if current_edge.stop == sink:
+            return backtrack_route(current_edge)
+        for neighboring_edge in graph.connected_edges(current_edge):  # O(n)
+            if not edges_visited[neighboring_edge] and not is_full(neighboring_edge):
+                edges_to_visit.appendleft(neighboring_edge)
+                neighboring_edge.predecessor = current_edge  # setting predecessor for backtracking
+                edges_visited[neighboring_edge] = True
+                edges_visited[graph.get_opposite_edge(neighboring_edge)] = True
+                if neighboring_edge.stop == sink:
+                    return backtrack_route(neighboring_edge)
 
-            G[prev][cur] -= new_flow
-            G[cur][prev] += new_flow
-            cur = prev
 
-        parents = [-1]*N
-        i += 1
+def get_sample_data():
+    file = open("./data/secret/2med.in")
+    return file.read()
 
-    return flow_tot
 
-'''
-Set zero flow to the given edge relation
-'''
-def zero_flow(G,u,v):
-    G[u][v] = 0
-    G[v][u] = 0
+def get_data():
+    file = sys.stdin
+    return file.read()
 
-'''
-Adds an edge to an undirected graph
-'''
-def add_edge(G,u,v,flow):
-    G[u][v] = flow
-    G[v][u] = flow
+def binary_search_flow(initial_graph, left, right):
+    global mid, max_flow, last_valid
+    if right >= left:
+        mid = left + (right - left) // 2
+        copied_graph = copy.deepcopy(initial_graph)
+        copied_graph.remove_up_to(mid)
+        max_flow = copied_graph.get_max_flow()
+        if max_flow >= min_tot_flow:
+            last_valid = (mid, max_flow)
+            return binary_search_flow(initial_graph, mid + 1, right)
+        else:
+            return binary_search_flow(initial_graph, left, mid - 1)
+    else:
+        return last_valid
 
-'''
-'''
-def calc_flow(G,edge_order,paths,N,C,P,source,sink):
-    Gr = copy.deepcopy(G)
+def main():
+    data = get_sample_data()
+    parse_data(data)
+    routes_removed, max_flow = binary_search_flow(graph, 0, len(routes_to_remove))
 
-    i = 0
-    flow = sys.maxsize
-    prev_flow = flow
-    while flow >= C and P > i:
-        u,v = edge_order[paths[i]]
-        zero_flow(Gr,u,v)
-        G = copy.deepcopy(Gr)
+    print(routes_removed, max_flow)
 
-        prev_flow = flow
-        flow = max_flow(G,source,sink,N)
-
-        i += 1
-
-    print(i-1,prev_flow)
-
-'''
-1. Calculate flow through original graph
-2. Create residual Graph Gr with deepcopy and remove next edge and calculate flow
-3. Check if flow through Gr meets the conditions
-4. Repeat 2 and 3 till the conditions are broken
-'''
-if __name__ == "__main__":
-
-    # Parsing of data
-    data = [[int(i) for i in line.strip('\n').split()] for line in sys.stdin]
-    N, M, C, P = data[0]
-    source = sink = 0
-
-    G = defaultdict(dict)
-    source,sink = 0, N-1
-    edge_ord = []
-
-    for i in data[1:M+1]:
-        add_edge(G,i[0],i[1],i[2])
-        edge_ord.append((i[0],i[1]))
-
-    paths = [i[0] for i in data[M+1:]]
-
-    calc_flow(G,edge_ord, paths, N, C, P, source, sink)
+if __name__ == '__main__':
+    main()
